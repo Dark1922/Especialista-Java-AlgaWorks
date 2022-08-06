@@ -38,4 +38,16 @@ public class Carro {
     public void setAnoFabricacao(int anoFabricacao) {
         this.anoFabricacao = anoFabricacao;
     }
+
+    @Override
+    public String toString() {
+        return "Carro{" +
+            "fabricante='" + fabricante + '\'' +
+            ", modelo='" + modelo + '\'' +
+            ", cor='" + cor + '\'' +
+            ", anoFabricacao=" + anoFabricacao +
+            '}';
+    }
+
+
 }
