@@ -5,7 +5,7 @@ public class Carro {
     private String fabricante;
     private String modelo;
     private String cor;
-    int anoFabricacao;
+    private int anoFabricacao;
 
     public String getFabricante() {
         return fabricante;

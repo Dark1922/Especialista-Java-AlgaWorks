@@ -2,30 +2,138 @@ package algaworks.mod2;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class teste {
 
+
     public static void main(String[] args) {
+        Scanner ler = new Scanner(System.in);
 
-        DecimalFormat saida = new DecimalFormat("00.0000");
+        double vlr;
+        System.out.printf("Informe um valor em R$: ");
+        try {
+            vlr = ler.nextDouble();
+            System.out.printf("\nValor por extenso:\n");
+            System.out.printf("%s\n", valorPorExtenso(vlr));
+        } catch (InputMismatchException e) {
+            System.out.printf("\nErro: valor informado incompatível.\n");
+        }
+    }
 
-        double A= 1040.32;
-        double B= 1049.00;
-        double C= 1023.00;
-        double media;
+    public static String valorPorExtenso(double vlr) {
+        try {
+            if (vlr == 0)
+                return ("zero");
 
-        media= ((A*2)+(B*3)+(C*5))/(2+3+5);
+            long inteiro = (long) Math.abs(vlr);
+            double resto = vlr - inteiro;
 
-        String valorFormatado = NumberFormat.getCurrencyInstance().format(12005.11);
-        System.out.println( valorFormatado );
+            String vlrS = String.valueOf(inteiro);
+            if (vlrS.length() > 15)
+                return ("Erro: valor superior a 999 trilhões.");
 
-        String valorFormatado1 = new DecimalFormat("#,##0.00").format(12005.11);
-        System.out.println( valorFormatado1 );
+            String s = "", saux, vlrP;
+            String centavos = String.valueOf((int) Math.round(resto * 100));
 
-        System.out.println("MEDIA = "+saida.format(media));
+            String[] unidade = {"", "um", "dois", "três", "quatro", "cinco",
+                "seis", "sete", "oito", "nove", "dez", "onze",
+                "doze", "treze", "quatorze", "quinze", "dezesseis",
+                "dezessete", "dezoito", "dezenove"};
+            String[] centena = {"", "cento", "duzentos", "trezentos",
+                "quatrocentos", "quinhentos", "seiscentos",
+                "setecentos", "oitocentos", "novecentos"};
+            String[] dezena = {"", "", "vinte", "trinta", "quarenta", "cinquenta",
+                "sessenta", "setenta", "oitenta", "noventa"};
+            String[] qualificaS = {"", "mil", "milhão", "bilhão", "trilhão"};
+            String[] qualificaP = {"", "mil", "milhões", "bilhões", "trilhões"};
 
 
+            int n, unid, dez, cent, tam, i = 0;
+            boolean umReal = false, tem = false;
+            while (!vlrS.equals("0")) {
+                tam = vlrS.length();
+
+                if (tam > 3) {
+                    vlrP = vlrS.substring(tam - 3, tam);
+                    vlrS = vlrS.substring(0, tam - 3);
+                } else {
+                    vlrP = vlrS;
+                    vlrS = "0";
+                }
+                if (!vlrP.equals("000")) {
+                    saux = "";
+                    if (vlrP.equals("100"))
+                        saux = "cem";
+                    else {
+                        n = Integer.parseInt(vlrP, 10);
+                        cent = n / 100;
+                        dez = (n % 100) / 10;
+                        unid = (n % 100) % 10;
+                        if (cent != 0)
+                            saux = centena[cent];
+                        if ((n % 100) <= 19) {
+                            if (saux.length() != 0)
+                                saux = saux + " e " + unidade[n % 100];
+                            else saux = unidade[n % 100];
+                        } else {
+                            if (saux.length() != 0)
+                                saux = saux + " e " + dezena[dez];
+                            else saux = dezena[dez];
+                            if (unid != 0) {
+                                if (saux.length() != 0)
+                                    saux = saux + " e " + unidade[unid];
+                                else saux = unidade[unid];
+                            }
+                        }
+                    }
+                    if (vlrP.equals("1") || vlrP.equals("001")) {
+                        if (i == 0)
+                            umReal = true;
+                        else saux = saux + " " + qualificaS[i];
+                    } else if (i != 0)
+                        saux = saux + " " + qualificaP[i];
+                    if (s.length() != 0)
+                        s = saux + ", " + s;
+                    else s = saux;
+                }
+                if (((i == 0) || (i == 1)) && s.length() != 0)
+                    tem = true;
+                i = i + 1;
+            }
+
+            if (s.length() != 0) {
+                if (umReal)
+                    s = s + " real";
+                else if (tem)
+                    s = s + " reais";
+                else s = s + " de reais";
+            }
+
+            if (!centavos.equals("0")) {
+                if (s.length() != 0)
+                    s = s + " e ";
+                if (centavos.equals("1"))
+                    s = s + "um centavo";
+                else {
+                    n = Integer.parseInt(centavos, 10);
+                    if (n <= 19)
+                        s = s + unidade[n];
+                    else {
+                        unid = n % 10;
+                        dez = n / 10;
+                        s = s + dezena[dez];
+                        if (unid != 0)
+                            s = s + " e " + unidade[unid];
+                    }
+                    s = s + " centavos";
+                }
+            }
+            return (s);
+        }catch (Exception e) {
+            throw e;
+        }
     }
 
 }
