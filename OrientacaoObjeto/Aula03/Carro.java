@@ -7,6 +7,8 @@ public class Carro {
     private String cor;
     private int anoFabricacao;
 
+    Proprietario proprietario;
+
     public String getFabricante() {
         return fabricante;
     }
@@ -48,6 +50,4 @@ public class Carro {
             ", anoFabricacao=" + anoFabricacao +
             '}';
     }
-
-
 }
